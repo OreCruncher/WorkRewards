@@ -53,17 +53,16 @@ public class BlockBreakEventListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         Player player = event.getPlayer();
-        if (player != null)
+        if (player != null && player.hasPermission("workrewards.receive"))
         {
             Block block = event.getBlock();
             Material material = block.getType();
 
             String name = material.toString();
 
-            ItemStack stack = block.getState().getData().toItemStack();
-
             if (name.length() > 1 && name.charAt(0) == 'X' && Character.isDigit(name.charAt(1)))
             {
+                ItemStack stack = block.getState().getData().toItemStack();
                 name = name + ":" + stack.getDurability();
             }
 
@@ -81,15 +80,7 @@ public class BlockBreakEventListener implements Listener
 
                 //  Time for a pay day!
                 WorkRewards.economy.depositPlayer(player.getName(), reward);
-
-                StringBuilder s = new StringBuilder();
-                s.append(ChatColor.BLUE);
-                s.append("You have received ");
-                s.append(reward);
-                s.append(" ");
-                s.append(WorkRewards.economy.currencyNamePlural());
-                s.append("for mining the block!");
-                player.sendMessage(s.toString());
+                player.sendMessage(ChatColor.BLUE + "You have received " + reward + " " + WorkRewards.economy.currencyNamePlural() + "for mining the block!" );
             }
         }
     }
