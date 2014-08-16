@@ -1,6 +1,8 @@
-# The following is an abbreviated list of blocks that are found within the Minecraft universe.  These blocks
-# comprise the "valuable" blocks that can be encountered.  To obtain a listing of blocks in the system
-# use the /wrdumpblocks command to dump the block list to blocks.yml.
+#
+# Information on what these settings mean can be found on the wiki located at
+# http://github.com/OreCruncher/WorkRewards/wiki
+#
+sendPlayerRewardMessage: true
 rewards:
   MOB_SPAWNER: 0.0
   QUARTZ_ORE: 0.0

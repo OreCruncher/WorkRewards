@@ -62,7 +62,8 @@ public final class Rewards
             FileConfiguration outConfig = new YamlConfiguration();
             outConfig.set("blocks", material);
             outConfig.save(new File(plugin.getDataFolder(), "blocks.yml"));
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             plugin.getLogger().severe("Unable to write material data to output file: " + ex.toString());
         }
@@ -73,8 +74,6 @@ public final class Rewards
         Logger log = plugin.getLogger();
 
         log.info("Initializing material list");
-        //addIfNotPresent(Material.IRON_ORE);
-        //addIfNotPresent(Material.GOLD_ORE);
         addIfNotPresent(Material.DIAMOND_ORE);
         addIfNotPresent(Material.COAL_ORE);
         addIfNotPresent(Material.REDSTONE_ORE);
@@ -104,7 +103,8 @@ public final class Rewards
             {
                 setReward(entry.getKey().toUpperCase(), Double.parseDouble(entry.getValue().toString()));
             }
-        } else
+        }
+        else
         {
             log.info("No configuration data present");
         }

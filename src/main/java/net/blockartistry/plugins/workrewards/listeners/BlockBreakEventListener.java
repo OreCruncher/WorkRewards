@@ -13,7 +13,6 @@ package net.blockartistry.plugins.workrewards.listeners;
 
 import net.blockartistry.plugins.workrewards.WorkRewards;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -22,13 +21,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
+
 public class BlockBreakEventListener implements Listener
 {
     protected WorkRewards plugin;
+    protected boolean sendMessage;
+    protected String moneyName;
+    protected DecimalFormat fmt = new DecimalFormat("0.##");
 
-    public BlockBreakEventListener(WorkRewards plugin)
+    public BlockBreakEventListener(WorkRewards plugin, boolean sendMessage)
     {
         this.plugin = plugin;
+        this.sendMessage = sendMessage;
+
+        moneyName = this.plugin.economy.currencyNameSingular();
+        if(!moneyName.isEmpty())
+        {
+            moneyName = " " + moneyName;
+        }
     }
 
     public boolean hasSilkTouch(ItemStack tool)
@@ -36,29 +47,16 @@ public class BlockBreakEventListener implements Listener
         return tool != null && tool.containsEnchantment(Enchantment.SILK_TOUCH);
     }
 
-    public boolean isSilkTouchSensitive(Block block)
-    {
-        Material material = block.getType();
-        return material == Material.COAL_ORE ||
-                material == Material.DIAMOND_ORE ||
-                material == Material.EMERALD_ORE ||
-                material == Material.REDSTONE_ORE ||
-                material == Material.LAPIS_ORE ||
-                material == Material.GLOWING_REDSTONE_ORE ||
-                material == Material.QUARTZ_ORE ||
-                material == Material.GLOWSTONE;
-    }
-
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event)
     {
         Player player = event.getPlayer();
-        if (player != null && player.hasPermission("workrewards.receive"))
+
+        //  Has to be a player, must have permission, and must not be using a tool with silk touch
+        if (player != null && player.hasPermission("workrewards.receive") && !hasSilkTouch(player.getItemInHand()))
         {
             Block block = event.getBlock();
-            Material material = block.getType();
-
-            String name = material.toString();
+            String name = block.getType().toString();
 
             if (name.length() > 1 && name.charAt(0) == 'X' && Character.isDigit(name.charAt(1)))
             {
@@ -70,17 +68,12 @@ public class BlockBreakEventListener implements Listener
 
             if (reward > 0.0)
             {
-                //  If the block is sensitive to silk touch, and the player is using
-                //  a silk touch tool, then return.  Don't want them cashing in
-                //  a bunch of times.
-                if (isSilkTouchSensitive(block) && hasSilkTouch(player.getItemInHand()))
-                {
-                    return;
-                }
-
                 //  Time for a pay day!
-                WorkRewards.economy.depositPlayer(player.getName(), reward);
-                player.sendMessage(ChatColor.BLUE + "You have received " + reward + " " + WorkRewards.economy.currencyNamePlural() + "for mining the block!" );
+                plugin.economy.depositPlayer(player.getName(), reward);
+                if(sendMessage)
+                {
+                    player.sendMessage(ChatColor.BLUE + "You have received " + fmt.format(reward) + moneyName + " for mining the block!");
+                }
             }
         }
     }

@@ -12,7 +12,6 @@
 package net.blockartistry.plugins.workrewards.commands;
 
 import net.blockartistry.plugins.workrewards.WorkRewards;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,11 +19,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 public class ListCommand implements CommandExecutor
 {
     private final WorkRewards plugin;
+
+    protected DecimalFormat fmt = new DecimalFormat("0.##");
 
     public ListCommand(WorkRewards plugin)
     {
@@ -36,16 +38,16 @@ public class ListCommand implements CommandExecutor
     {
         Player player = null;
 
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
-            player = (Player)sender;
+            player = (Player) sender;
         }
 
-        if(sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.list")))
+        if (sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.list")))
         {
-            Map<String, Double> list = WorkRewards.rewards.getRewardList();
+            Map<String, Double> list = plugin.rewards.getRewardList();
             sender.sendMessage(ChatColor.GOLD + "Possible work rewards:");
-            if( list == null || list.size() == 0)
+            if (list == null || list.size() == 0)
             {
                 sender.sendMessage(ChatColor.RED + "No rewards defined");
             }
@@ -53,14 +55,7 @@ public class ListCommand implements CommandExecutor
             {
                 for (Map.Entry<String, Double> entry : list.entrySet())
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(ChatColor.YELLOW);
-                    sb.append(entry.getKey());
-                    sb.append(ChatColor.WHITE);
-                    sb.append(": ");
-                    sb.append(ChatColor.GREEN);
-                    sb.append(entry.getValue());
-                    sender.sendMessage(sb.toString());
+                    sender.sendMessage(ChatColor.YELLOW + entry.getKey() + ChatColor.WHITE + ": " + ChatColor.GREEN + fmt.format(entry.getValue()));
                 }
             }
             return true;

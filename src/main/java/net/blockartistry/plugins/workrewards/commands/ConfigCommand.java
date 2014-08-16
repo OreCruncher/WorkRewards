@@ -12,7 +12,6 @@
 package net.blockartistry.plugins.workrewards.commands;
 
 import net.blockartistry.plugins.workrewards.WorkRewards;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,26 +33,26 @@ public class ConfigCommand implements CommandExecutor
     {
         Player player = null;
 
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
-            player = (Player)sender;
+            player = (Player) sender;
         }
 
-        if(sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.config")))
+        if (sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.config")))
         {
-            if(args.length == 2)
+            if (args.length == 2)
             {
                 try
                 {
                     String key = args[0].toUpperCase();
                     Double value = Double.parseDouble(args[1]);
-                    WorkRewards.rewards.setReward(key, value);
-                    WorkRewards.rewards.save(plugin.getConfig());
+                    plugin.rewards.setReward(key, value);
+                    plugin.rewards.save(plugin.getConfig());
                     plugin.saveConfig();
                     sender.sendMessage(ChatColor.GOLD + "The reward " + key + " has been set to a value of " + value);
                     return true;
                 }
-                catch(NumberFormatException ex)
+                catch (NumberFormatException ex)
                 {
                     sender.sendMessage(ChatColor.RED + "The reward value has to be valid decimal amount!");
                 }

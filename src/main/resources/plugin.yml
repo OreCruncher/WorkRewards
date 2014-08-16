@@ -1,6 +1,6 @@
 name: WorkRewards
 main: net.blockartistry.plugins.workrewards.WorkRewards
-version: 0.0.1
+version: 0.0.2
 description: Monetarily rewards players for breaking blocks.
 author: OreCruncher
 authors: [ ]

@@ -39,7 +39,6 @@ public final class WorkRewards extends JavaPlugin
         //  Load up rewards
         rewards = new Rewards(this);
         rewards.load(getConfig());
-
         rewards.save(getConfig());
         saveConfig();
 
@@ -53,13 +52,14 @@ public final class WorkRewards extends JavaPlugin
         if (!setupEconomy())
         {
             log.severe("Vault economy plugin not found!  Plugin functionality will be disabled!");
-        } else
+        }
+        else
         {
             log.info("Economy plugin: " + economy.getName());
             log.info("Fractional digits: " + economy.fractionalDigits());
 
             //  Register event handlers
-            listener = new BlockBreakEventListener(this);
+            listener = new BlockBreakEventListener(this, getConfig().getBoolean("sendPlayerRewardMessage", true));
             getServer().getPluginManager().registerEvents(listener, this);
         }
     }

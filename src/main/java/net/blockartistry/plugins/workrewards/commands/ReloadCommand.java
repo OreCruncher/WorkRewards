@@ -12,7 +12,6 @@
 package net.blockartistry.plugins.workrewards.commands;
 
 import net.blockartistry.plugins.workrewards.WorkRewards;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,12 +33,12 @@ public class ReloadCommand implements CommandExecutor
     {
         Player player = null;
 
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
-            player = (Player)sender;
+            player = (Player) sender;
         }
 
-        if(sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.reload")))
+        if (sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.reload")))
         {
             plugin.onDisable();
             plugin.reloadConfig();

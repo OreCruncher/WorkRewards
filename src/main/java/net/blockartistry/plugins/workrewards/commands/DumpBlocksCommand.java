@@ -12,7 +12,6 @@
 package net.blockartistry.plugins.workrewards.commands;
 
 import net.blockartistry.plugins.workrewards.WorkRewards;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,15 +33,15 @@ public class DumpBlocksCommand implements CommandExecutor
     {
         Player player = null;
 
-        if(sender instanceof Player)
+        if (sender instanceof Player)
         {
-            player = (Player)sender;
+            player = (Player) sender;
         }
 
-        if(sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.config")))
+        if (sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.config")))
         {
             plugin.getLogger().info("Dumping material information to blocks.yml");
-            WorkRewards.rewards.dumpMaterialEnum();
+            plugin.rewards.dumpMaterialEnum();
             sender.sendMessage(ChatColor.GOLD + "Block information dumped to blocks.yml");
             return true;
         }
