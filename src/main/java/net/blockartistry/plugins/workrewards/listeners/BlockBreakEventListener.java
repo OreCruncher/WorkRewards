@@ -16,7 +16,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +26,6 @@ public class BlockBreakEventListener implements Listener
 {
     protected WorkRewards plugin;
 
-    Entity
     public BlockBreakEventListener(WorkRewards plugin)
     {
         this.plugin = plugin;
@@ -55,7 +53,7 @@ public class BlockBreakEventListener implements Listener
     public void onBlockBreak(BlockBreakEvent event)
     {
         Player player = event.getPlayer();
-        if(player != null)
+        if (player != null)
         {
             Block block = event.getBlock();
             Material material = block.getType();
@@ -64,19 +62,19 @@ public class BlockBreakEventListener implements Listener
 
             ItemStack stack = block.getState().getData().toItemStack();
 
-            if(name.length() > 1 && name.charAt(0) == 'X' && Character.isDigit(name.charAt(1)))
+            if (name.length() > 1 && name.charAt(0) == 'X' && Character.isDigit(name.charAt(1)))
             {
                 name = name + ":" + stack.getDurability();
             }
 
             double reward = WorkRewards.rewards.getReward(name);
 
-            if(reward > 0.0)
+            if (reward > 0.0)
             {
                 //  If the block is sensitive to silk touch, and the player is using
                 //  a silk touch tool, then return.  Don't want them cashing in
                 //  a bunch of times.
-                if(isSilkTouchSensitive(block) && hasSilkTouch(player.getItemInHand()))
+                if (isSilkTouchSensitive(block) && hasSilkTouch(player.getItemInHand()))
                 {
                     return;
                 }
