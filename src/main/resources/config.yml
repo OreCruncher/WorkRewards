@@ -1,0 +1,14 @@
+# The following is an abbreviated list of blocks that are found within the Minecraft universe.  These blocks
+# comprise the "valuable" blocks that can be encountered.  To obtain a listing of blocks in the system
+# use the /wrdumpblocks command to dump the block list to blocks.yml.
+rewards:
+  MOB_SPAWNER: 0.0
+  QUARTZ_ORE: 0.0
+  REDSTONE_ORE: 0.0
+  GLOWING_REDSTONE_ORE: 0.0
+  DIAMOND_ORE: 0.0
+  LAPIS_ORE: 0.0
+  GLOWSTONE: 0.0
+  MONSTER_EGGS: 0.0
+  EMERALD_ORE: 0.0
+  COAL_ORE: 0.0

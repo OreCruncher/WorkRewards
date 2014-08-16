@@ -16,20 +16,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
-
-import java.util.logging.Logger;
 
 public class BlockBreakEventListener implements Listener
 {
     protected WorkRewards plugin;
 
+    Entity
     public BlockBreakEventListener(WorkRewards plugin)
     {
         this.plugin = plugin;

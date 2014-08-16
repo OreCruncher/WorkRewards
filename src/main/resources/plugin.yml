@@ -1,3 +1,52 @@
 name: WorkRewards
-main: net.blockartistry.plugins.WorkRewards.WorkRewards
+main: net.blockartistry.plugins.workrewards.WorkRewards
 version: 0.0.1
+description: Monetarily rewards players for breaking blocks.
+author: OreCruncher
+authors: [ ]
+website: http://github.com/OreCruncher/WorkRewards
+database: false
+depend: [Vault]
+
+commands:
+    wrreload:
+        description: Reloads the WorkRewards configuration
+        usage: /wrreload
+        permission: workrewards.reload
+        permission-message: You don't have permission to execute this command
+    wrconfig:
+        description: Configures a reward for breaking a specific block
+        usage: /wrconfig <blockID> <reward>
+        permission: workrewards.config
+        permission-message: You don't have permission to execute this command
+    wrlist:
+        description: Lists the rewards that can be recieved
+        usage: /wrlist
+        permission: workrewards.list
+        permission-message: You don't have permission to execute this command
+    wrdumpblocks:
+        description: Dumps the material list to a file
+        usage: /wrdumpblocks
+        permission: workrewards.config
+        permission-message: You don't have permission to execute this command
+
+permissions:
+    workrewards.*:
+        description: Gives access to all WorkRewards commands and capabilities
+        children:
+            workrewards.recieve: true
+            workrewards.reload: true
+            workrewards.config: true
+            workrewards.list: true
+    workrewards.receive:
+        description: Allows a player to receive a reward
+        default: true
+    workrewards.reload:
+        description: Allows a player to reload the WorkRewards configuration
+        default: op
+    workrewards.config:
+        description: Allows a player to configure a WorkRewards reward
+        default: op
+    workrewards.list:
+        description: Lists the possible rewards that can be given
+        default: true
