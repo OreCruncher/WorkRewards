@@ -2,7 +2,7 @@
 # Information on what these settings mean can be found on the wiki located at
 # http://github.com/OreCruncher/WorkRewards/wiki
 #
-sendPlayerRewardMessage: true
+sendPlayerRewardMessageThreshold: 0.0
 rewards:
   MOB_SPAWNER: 0.0
   QUARTZ_ORE: 0.0

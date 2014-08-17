@@ -26,14 +26,14 @@ import java.text.DecimalFormat;
 public class BlockBreakEventListener implements Listener
 {
     protected WorkRewards plugin;
-    protected boolean sendMessage;
+    protected double sendThreshold;
     protected String moneyName;
     protected DecimalFormat fmt = new DecimalFormat("0.##");
 
-    public BlockBreakEventListener(WorkRewards plugin, boolean sendMessage)
+    public BlockBreakEventListener(WorkRewards plugin, double sendThreshold)
     {
         this.plugin = plugin;
-        this.sendMessage = sendMessage;
+        this.sendThreshold = sendThreshold;
 
         moneyName = this.plugin.economy.currencyNameSingular();
         if(!moneyName.isEmpty())
@@ -70,7 +70,7 @@ public class BlockBreakEventListener implements Listener
             {
                 //  Time for a pay day!
                 plugin.economy.depositPlayer(player.getName(), reward);
-                if(sendMessage)
+                if(reward > sendThreshold)
                 {
                     player.sendMessage(ChatColor.BLUE + "You have received " + fmt.format(reward) + moneyName + " for mining the block!");
                 }

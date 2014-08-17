@@ -59,7 +59,7 @@ public final class WorkRewards extends JavaPlugin
             log.info("Fractional digits: " + economy.fractionalDigits());
 
             //  Register event handlers
-            listener = new BlockBreakEventListener(this, getConfig().getBoolean("sendPlayerRewardMessage", true));
+            listener = new BlockBreakEventListener(this, getConfig().getDouble("sendPlayerRewardMessageThreshold", 0.0));
             getServer().getPluginManager().registerEvents(listener, this);
         }
     }
