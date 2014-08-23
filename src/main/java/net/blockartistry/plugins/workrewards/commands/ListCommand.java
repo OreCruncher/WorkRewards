@@ -45,18 +45,41 @@ public class ListCommand implements CommandExecutor
 
         if (sender instanceof ConsoleCommandSender || (player != null && player.hasPermission("workrewards.list")))
         {
-            Map<String, Double> list = plugin.rewards.getRewardList();
-            sender.sendMessage(ChatColor.GOLD + "Possible work rewards:");
-            if (list == null || list.size() == 0)
+            if (args.length == 0 || args[0].equalsIgnoreCase("rewards"))
             {
-                sender.sendMessage(ChatColor.RED + "No rewards defined");
+                Map<String, Double> list = plugin.rewards.getRewardList();
+                sender.sendMessage(ChatColor.GOLD + "Possible work rewards:");
+                if (list == null || list.size() == 0)
+                {
+                    sender.sendMessage(ChatColor.RED + "No rewards defined");
+                }
+                else
+                {
+                    for (Map.Entry<String, Double> entry : list.entrySet())
+                    {
+                        sender.sendMessage(ChatColor.YELLOW + entry.getKey() + ChatColor.WHITE + ": " + ChatColor.GREEN + fmt.format(entry.getValue()));
+                    }
+                }
+            }
+            else if (args[0].equalsIgnoreCase("modifiers"))
+            {
+                Map<String, Double> list = plugin.rewards.getModifierList();
+                sender.sendMessage(ChatColor.GOLD + "Per World Modifiers:");
+                if (list == null || list.size() == 0)
+                {
+                    sender.sendMessage(ChatColor.RED + "No modifiers defined");
+                }
+                else
+                {
+                    for (Map.Entry<String, Double> entry : list.entrySet())
+                    {
+                        sender.sendMessage(ChatColor.YELLOW + entry.getKey() + ChatColor.WHITE + ": " + ChatColor.GREEN + fmt.format(entry.getValue()));
+                    }
+                }
             }
             else
             {
-                for (Map.Entry<String, Double> entry : list.entrySet())
-                {
-                    sender.sendMessage(ChatColor.YELLOW + entry.getKey() + ChatColor.WHITE + ": " + ChatColor.GREEN + fmt.format(entry.getValue()));
-                }
+                return false;
             }
             return true;
         }

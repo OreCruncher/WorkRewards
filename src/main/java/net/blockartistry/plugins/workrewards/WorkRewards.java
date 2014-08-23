@@ -11,11 +11,8 @@
 
 package net.blockartistry.plugins.workrewards;
 
-import net.blockartistry.plugins.workrewards.commands.ConfigCommand;
-import net.blockartistry.plugins.workrewards.commands.DumpBlocksCommand;
-import net.blockartistry.plugins.workrewards.commands.ListCommand;
-import net.blockartistry.plugins.workrewards.commands.ReloadCommand;
-import net.blockartistry.plugins.workrewards.listeners.BlockBreakEventListener;
+import net.blockartistry.plugins.workrewards.commands.*;
+import net.blockartistry.plugins.workrewards.listeners.RewardEventListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -25,9 +22,9 @@ import java.util.logging.Logger;
 
 public final class WorkRewards extends JavaPlugin
 {
-    public static Economy economy;
-    public static Rewards rewards;
-    public static BlockBreakEventListener listener;
+    public Economy economy;
+    public Rewards rewards;
+    public RewardEventListener listener;
 
     @Override
     public void onEnable()
@@ -45,13 +42,14 @@ public final class WorkRewards extends JavaPlugin
         //  Configure the commands
         getCommand("wrreload").setExecutor(new ReloadCommand(this));
         getCommand("wrconfig").setExecutor(new ConfigCommand(this));
+        getCommand("wrworld").setExecutor(new WorldCommand(this));
         getCommand("wrdumpblocks").setExecutor(new DumpBlocksCommand(this));
         getCommand("wrlist").setExecutor(new ListCommand(this));
 
         //  Obtain economy reference
         if (!setupEconomy())
         {
-            log.severe("Vault economy plugin not found!  Plugin functionality will be disabled!");
+            log.warning("Vault economy plugin not found!  Plugin functionality will be disabled!");
         }
         else
         {
@@ -59,7 +57,7 @@ public final class WorkRewards extends JavaPlugin
             log.info("Fractional digits: " + economy.fractionalDigits());
 
             //  Register event handlers
-            listener = new BlockBreakEventListener(this, getConfig().getDouble("sendPlayerRewardMessageThreshold", 0.0));
+            listener = new RewardEventListener(this, getConfig().getDouble("sendPlayerRewardMessageThreshold", 0.0));
             getServer().getPluginManager().registerEvents(listener, this);
         }
     }
@@ -73,6 +71,7 @@ public final class WorkRewards extends JavaPlugin
         economy = null;
         getCommand("wrreload").setExecutor(null);
         getCommand("wrconfig").setExecutor(null);
+        getCommand("wrworld").setExecutor(null);
         getCommand("wrlist").setExecutor(null);
         getCommand("wrdumpblocks").setExecutor(null);
     }

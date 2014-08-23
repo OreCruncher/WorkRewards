@@ -19,9 +19,14 @@ commands:
         usage: /wrconfig <blockID> <reward>
         permission: workrewards.config
         permission-message: You don't have permission to execute this command
+    wrworld:
+        description: Configures a world multiplier for rewards
+        usage: /wrworld <world> <multiplier>
+        permission: workrewards.config
+        permission-message: You don't have permission to execute this command
     wrlist:
-        description: Lists the rewards that can be recieved
-        usage: /wrlist
+        description: Lists the rewards that can be received
+        usage: /wrlist <rewards | modifiers>
         permission: workrewards.list
         permission-message: You don't have permission to execute this command
     wrdumpblocks:

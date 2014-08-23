@@ -11,7 +11,9 @@
 
 package net.blockartistry.plugins.workrewards;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,7 +30,12 @@ public final class Rewards
 {
     protected final WorkRewards plugin;
 
+    //  The String key is forced upper case when inserted.  This ensures
+    //  consistent use context, as well as the fact that a majority of the
+    //  time the string will be upper case already thus allowing the
+    //  underlying string routines to be more optimal in memory use.
     private HashMap<String, Double> rewardList;
+    private HashMap<String, Double> worldModifiers;
 
     public Rewards(WorkRewards plugin)
     {
@@ -37,10 +44,19 @@ public final class Rewards
 
     protected void addIfNotPresent(Material material)
     {
-        String key = material.toString();
+        String key = material.toString().toUpperCase();
         if (!rewardList.containsKey(key))
         {
             setReward(key, 0.0f);
+        }
+    }
+
+    protected void addIfNotPresent(World world)
+    {
+        String key = world.getName();
+        if (!worldModifiers.containsKey(key))
+        {
+            setWorld(key, 1.0f);
         }
     }
 
@@ -86,11 +102,21 @@ public final class Rewards
         addIfNotPresent(Material.MONSTER_EGGS); // Stone block that spawns silver fish
     }
 
+    protected void initMultiplierWorlds()
+    {
+        List<World> worlds = Bukkit.getWorlds();
+        for (World w : worlds)
+        {
+            addIfNotPresent(w);
+        }
+    }
+
     public void load(FileConfiguration config)
     {
         Logger log = plugin.getLogger();
 
         rewardList = new HashMap<>();
+        worldModifiers = new HashMap<>();
 
         //  Get what is in the config and merge
         log.info("Loading configuration data");
@@ -101,16 +127,31 @@ public final class Rewards
             Map<String, Object> rewards = section.getValues(false);
             for (Map.Entry<String, Object> entry : rewards.entrySet())
             {
-                setReward(entry.getKey().toUpperCase(), Double.parseDouble(entry.getValue().toString()));
+                setReward(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
             }
         }
         else
         {
-            log.info("No configuration data present");
+            log.info("No reward data present");
+        }
+
+        section = config.getConfigurationSection("worldModifiers");
+        if (section != null)
+        {
+            Map<String, Object> modifiers = section.getValues(false);
+            for (Map.Entry<String, Object> entry : modifiers.entrySet())
+            {
+                setWorld(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
+            }
+        }
+        else
+        {
+            log.info("No world modifier data present");
         }
 
         //  Get the entities that are known in the server
         initMapFromOres();
+        initMultiplierWorlds();
 
         //  Flush it back out to disk because there may be
         //  new entries
@@ -120,6 +161,12 @@ public final class Rewards
 
     public void save(FileConfiguration config)
     {
+        ConfigurationSection worlds = config.createSection("worldModifiers", worldModifiers);
+        if (worlds == null)
+        {
+            plugin.getLogger().info("Unable to save world modifier data into config file!");
+        }
+
         ConfigurationSection section = config.createSection("rewards", rewardList);
 
         if (section == null)
@@ -130,13 +177,31 @@ public final class Rewards
 
     public void setReward(String reward, double amount)
     {
-        rewardList.put(reward, amount);
+        if (reward != null)
+        {
+            rewardList.put(reward.toUpperCase(), amount);
+        }
     }
 
-    public double getReward(String reward)
+    public void setWorld(String world, double multiplier)
     {
-        Double r = rewardList.get(reward);
-        return r == null ? -1.0 : r;
+        if (world != null)
+        {
+            worldModifiers.put(world.toUpperCase(), multiplier);
+        }
+
+    }
+
+    public double getReward(String reward, String world)
+    {
+        Double r = null;
+        Double m = null;
+        if (reward != null && world != null)
+        {
+            r = rewardList.get(reward.toUpperCase());
+            m = worldModifiers.get(world.toUpperCase());
+        }
+        return r == null ? -1.0 : r * ((m == null) ? (1.0d) : (m));
     }
 
     public Map<String, Double> getRewardList()
@@ -153,5 +218,10 @@ public final class Rewards
         }
 
         return result;
+    }
+
+    public Map<String, Double> getModifierList()
+    {
+        return new HashMap<>(worldModifiers);
     }
 }
